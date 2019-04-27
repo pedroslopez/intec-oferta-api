@@ -4,7 +4,7 @@
   "description": "API to view INTEC's course offerings, as well as detecting changes",
   "main": "index.js",
   "scripts": {
-    "scheduled": "node scheduled",
+    "scheduled": "node ./src/scheduled",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -24,6 +24,7 @@
     "axios": "^0.18.0",
     "axios-cookiejar-support": "^0.4.2",
     "cheerio": "^1.0.0-rc.3",
+    "mongoose": "^5.5.4",
     "tough-cookie": "^3.0.1"
   }
 }
