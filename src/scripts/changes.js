@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
-const { MONGO_URL } = require('../../config');
-const { Section, Change } = require('../../models');
+const { MONGO_URL } = require('../config');
+const { Section, Change } = require('../models');
 
 const getDiscriminator = (code, section) => `${code}-${section}`;
 
@@ -69,11 +69,13 @@ const computeChanges = async (offer) => {
             }
 
             if(discrim in offerChanges) {
+                console.log('UPDATED SECTION', discrim);
                 await Section.findOneAndUpdate({code: section.code, section: section.section}, section).exec();
             }
 
             updatedSections.push(discrim);
         } else {
+            console.log('REMOVED SECTION', discrim);
             deletedSections.push(dbSection);
             await Section.deleteOne({_id: dbSection._id}).exec();
         }
@@ -82,6 +84,7 @@ const computeChanges = async (offer) => {
     // New sections
     const newSections = Object.keys(sections).filter(x => !updatedSections.includes(x));
     for(let newSection of newSections) {
+        console.log('NEW SECTION', newSection);
         await new Section(sections[newSection]).save();
     }
 

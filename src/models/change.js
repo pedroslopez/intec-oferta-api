@@ -23,6 +23,6 @@ const ChangeSchema = new Schema({
     newValue: {
         type: String
     }
-}, { timestamps: true});
+}, { timestamps: true });
 
 module.exports = mongoose.model('Change', ChangeSchema);

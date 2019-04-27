@@ -27,7 +27,7 @@ const SectionSchema = new Schema({
         type: [String],
         required: true
     }
-}, { timestamps: true});
+}, { timestamps: true });
 
 SectionSchema.index({code: 1, section: 1}, {unique: true});
 
