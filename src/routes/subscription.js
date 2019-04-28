@@ -7,7 +7,7 @@ const { Subscription } = require('../models');
 
 router.post('/', asyncHandler(async (req, res) => {
     let body = {
-        code: req.body.code,
+        code: req.body.code.toUpperCase(),
         email: req.body.email,
         options: req.body.options
     }
