@@ -23,8 +23,19 @@ const offer = [
         credits: '1',
         type: 'E',
         section: '02',
+        room: 'FD416',
+        professor: 'CARLOS JOA FONG',
+        schedule: [ '', '', '', '', '', '9/11' ] 
+    }, { 
+        code: 'INS378L',
+        name: 'LABORATORIO ESTRUCTURA DE DATOS Y ALGORITMOS II',
+        credits: '1',
+        type: 'E',
+        section: '03',
         room: 'FD412',
         professor: 'CARLOS JOA FONG',
         schedule: [ '', '', '', '', '', '9/11' ] 
     }
 ]
+
+module.exports = offer;

@@ -4,7 +4,11 @@ const mongoose = require('mongoose');
 
 const { MONGO_URL, SERVER_PORT } = require('./config');
 
-mongoose.connect(MONGO_URL, {useNewUrlParser: true});
+mongoose.connect(MONGO_URL, {
+    useNewUrlParser: true, 
+    useFindAndModify: false, 
+    useCreateIndex: true
+});
 
 mongoose.connection.on('connected', () => {
     console.log('✅ Successfully connected to database');
@@ -26,6 +30,7 @@ app.use(function(req, res, next) {
 
 app.use('/v1/offer', require('./routes/offer'));
 app.use('/v1/diff', require('./routes/diff'));
+app.use('/v1/subscription', require('./routes/subscription'));
 
 app.listen(SERVER_PORT, () => {
     console.log(`🚀 Server running on port ${ SERVER_PORT }.`);

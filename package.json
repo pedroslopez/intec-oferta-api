@@ -27,9 +27,11 @@
     "axios-cookiejar-support": "^0.4.2",
     "body-parser": "^1.19.0",
     "cheerio": "^1.0.0-rc.3",
+    "email-validator": "^2.0.4",
     "express": "^4.16.4",
     "express-async-handler": "^1.1.4",
     "mongoose": "^5.5.4",
+    "nodemailer": "^6.1.1",
     "tough-cookie": "^3.0.1"
   }
 }

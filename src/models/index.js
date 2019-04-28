@@ -1,4 +1,5 @@
 module.exports = {
     Section: require('./section'),
-    Change: require('./change')
+    Change: require('./change'),
+    Subscription: require('./subscription')
 };

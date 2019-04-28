@@ -1,4 +1,5 @@
 module.exports = {
+    scrapeOffer: require('./scrape'),
     computeChanges: require('./changes'),
-    scrapeOffer: require('./scrape')
+    notifyChanges: require('./notify')
 };

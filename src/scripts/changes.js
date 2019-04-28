@@ -1,6 +1,3 @@
-const mongoose = require('mongoose');
-
-const { MONGO_URL } = require('../config');
 const { Section, Change } = require('../models');
 
 const getDiscriminator = (code, section) => `${code}-${section}`;
@@ -8,12 +5,14 @@ const getDiscriminator = (code, section) => `${code}-${section}`;
 const registerChanges = async (diff) => {
     let newSections = diff.new.map(x => {return {type: 'CREATE', code: x.code, section: x.section}});
     let deletedSections = diff.deleted.map(x => { return {type: 'DELETE', code: x.code, section: x.section}});
-    let changedSections = Object.values(diff.changes).map(x => {return {type: 'UPDATE', ...x}});
+    let changedSections = diff.changes.map(x => {return {type: 'UPDATE', ...x}});
 
     let offerChanges = [...newSections, ...deletedSections, ...changedSections];
     if(offerChanges.length > 0) {
         await Change.insertMany(offerChanges);
     } 
+
+    return offerChanges;
 }
 
 const computeChanges = async (offer) => {
@@ -26,14 +25,9 @@ const computeChanges = async (offer) => {
         return map;
     }, {});
     
-    mongoose.connect(MONGO_URL, {useNewUrlParser: true});
-    mongoose.connection.on('connected', () => {
-        console.log('Connected to database');
-    });
+    let dbSections = await Section.find().lean().exec();
     
-    let dbSections = await Section.find().exec();
-    
-    let offerChanges = {};
+    let changedSections = [];
     let updatedSections = [];
     let deletedSections = [];
 
@@ -45,6 +39,7 @@ const computeChanges = async (offer) => {
 
             const track_fields = ['professor', 'room', 'credits', 'schedule', 'name'];
 
+            let updated = false;
             for(let field of track_fields) {
                 let oldValue = dbSection[field];
                 let newValue = section[field];
@@ -56,19 +51,16 @@ const computeChanges = async (offer) => {
                 }
 
                 if(oldValue !== newValue) {
-                    if(!(discrim in offerChanges)) {
-                        offerChanges[discrim] = [];
-                    }
-
-                    offerChanges[discrim].push({
+                    changedSections.push({
                         code: section.code, 
                         section: section.section, 
                         field, newValue, oldValue
                     });
+                    updated = true;
                 }
             }
 
-            if(discrim in offerChanges) {
+            if(updated) {
                 console.log('UPDATED SECTION', discrim);
                 await Section.findOneAndUpdate({code: section.code, section: section.section}, section).exec();
             }
@@ -90,13 +82,11 @@ const computeChanges = async (offer) => {
 
     const offerDiff = {
         new: newSections.map(x => sections[x]),
-        changes: offerChanges,
+        changes: changedSections,
         deleted: deletedSections
     }
 
     await registerChanges(offerDiff);
-
-    mongoose.connection.close();
 
     return offerDiff;
 };
